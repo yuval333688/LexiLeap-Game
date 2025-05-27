@@ -150,4 +150,4 @@ config.txt
 
 
 # Ignore Unusablecode files
-.unusablecode/
+unusefulcode/
