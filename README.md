@@ -76,7 +76,7 @@ Follow these instructions to get a local copy of the project up and running for 
 
 3.  **Frontend Setup:**
     -   No special setup is required. Open the `index.html` file in your web browser. It will automatically redirect to the level selection screen.
-    -   **Important:** Ensure you have corrected the `fetch` request in `typing_screen2.html` to use `http` instead of `https` to match the server.
+    -   **Important:** Ensure you have corrected the `fetch` request in `gameplay.html` to use `http` instead of `https` to match the server.
 
 ## API Endpoints
 
