@@ -147,3 +147,7 @@ env/
 
 # Ignore configuration files containing sensitive data
 config.txt
+
+
+# Ignore Unusablecode files
+.unusablecode/
