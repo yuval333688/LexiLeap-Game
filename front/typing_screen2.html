@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Typing App</title>
+    <style>
+       
+
+        .body {
+
+
+            display: relative;
+            width: 100vw;
+            height: 100vw;
+            background-color: lightblue;
+
+        }
+
+        .container {
+            width: 80%;
+            height: 80%;
+            border: 2px solid #ad8707;
+            margin: 10%;
+            display: flexbox;
+        }
+
+        .Performance {
+            display: flex;
+            flex-direction: row;
+            width: 50%;
+
+            justify-content: space-between;
+            margin: auto;
+            background-color: lightcyan;
+            font-family: sans-serif;
+            font-size: 20pt;
+            color: #ad8707;
+
+        }
+
+
+
+
+
+        .user_typing {
+
+            font-family: sans-serif;
+            font-size: 20pt;
+            font-weight: bold;
+            background-color: aliceblue;
+            color: #200441;
+            margin: 10% 15% ;
+            
+        }
+
+
+
+
+
+
+        .controls {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 50%;
+            margin: auto;
+
+        }
+
+
+
+        .button_play,
+        .button_stop,
+        .button_pause {
+            margin: 20pt;
+            width: 30pt;
+            height: auto;
+            background-color: lightblue;
+            border: none;
+            outline: none;
+
+        }
+
+
+
+        .Performance_x {
+
+            justify-content: top;
+        }
+    </style>
+</head>
+</head>
+
+<body class="body">
+    <div class="container">
+
+
+        <div class="Performance">
+
+
+
+
+
+            <div>
+                <div>
+                    time
+                </div>
+                <div id="id_time">
+                    00:00
+                </div>
+            </div>
+
+
+            <div>
+                <div>
+                    accuracy
+                </div>
+                <div id="id_accuracy">
+                    80%
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    speed
+                </div>
+                <div id="id_speed">
+                    20w/m
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div class="user_typing" id="id_user_typing">ewyery</div>
+
+
+
+
+        <div class="controls">
+            <button class="button_play" id="id_play" onclick="onClicPlay()">
+                <img src="\rec/play.svg" alt="play" class="icon_play" />
+            </button>
+            <button class="button_stop" id="id_stop" onclick="onClicStop()">
+                <img src="\rec/stop.svg" alt="stop" class="icon_stop" />
+            </button>
+            <button class="button_pause" id="id_pause" onclick="onClicPause()">
+                <img src="\rec/pause.svg" alt="pause" class="icon_pause" />
+            </button>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        { 
+        
+        const play = document.getElementById("id_play");
+        const stop = document.getElementById("id_stop");
+        const pause = document.getElementById("id_pause");
+        const user_typing = document.getElementById("id_user_typing");
+        const time = document.getElementById("id_time");
+        const accuracy = document.getElementById("id_accuracy");
+        const speed = document.getElementById("id_speed");
+           let level_data = [];
+
+            
+     
+        async function loadLevelData(level_number) {
+           
+            if (!level_number) {
+                user_typing.innerText = "Error: level number not found.";
+                return;
+            }
+
+            try {
+               
+                const response = await fetch('http://localhost:5000/getLevel/' + level_number);
+
+               
+                if (!response.ok) {
+                    throw new Error(`error ${response.statusText}`);
+                }
+
+               
+                const data = await response.json();
+                
+          
+                level_data = data;
+                console.log("Level data loaded successfully:", level_data);
+
+
+            } catch (error) {
+               
+                console.error("An error occurred while loading the information: ", error.message);
+                print("An error occurred while loading the information: ", error.message)
+                user_typing.innerText = "An error occurred while loading the information.";
+            }
+        }
+
+
+
+
+
+window.onload = function () {
+              const level_number = sessionStorage.getItem('level_number');
+            
+           
+            loadLevelData(level_number);
+            }
+
+
+    }
+    </script>
+</body>
+
+</html>
