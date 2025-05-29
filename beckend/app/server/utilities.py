@@ -1,15 +1,8 @@
-from flask import Flask, jsonify, g
-from flask_cors import CORS
+from flask import jsonify, g
+from ..storage.DatabaseManager import DatabaseManager # שתי נקודות
+from ..model.getLevel import getWordsInLevel         # שתי נקודות
+from ..model.user_progress import getUserLevelsInformation # שתי נקודות
 
-# Assuming the functions are in these files, adjust if necessary
-from beckend.app.model.getLevel import getWordsInLevel
-from storage.DatabaseManager import DatabaseManager
-from beckend.app.model.user_progress_service import getUserLevelsInformation
-
-app = Flask(__name__)
-CORS(app)
-
-# --- Database Connection Handling ---
 
 def get_db():
     """
@@ -17,6 +10,7 @@ def get_db():
     The connection is stored in Flask's 'g' object, which is unique for each request.
     """
     # Check if a 'db' object is not already in the request context ('g')
+
     if 'db' not in g:
         # If not, create a new DatabaseManager instance and store it
         g.db = DatabaseManager()
@@ -26,7 +20,6 @@ def get_db():
             g.db = None
     return g.db
 
-@app.teardown_appcontext
 def close_db(e=None):
     """
     Closes the database connection at the end of the request.
@@ -43,32 +36,24 @@ def close_db(e=None):
         print("Database connection teardown successful.")
 
 
-# --- API Routes ---
-
-@app.route("/")
-def say_hi():
-    """A simple route to confirm the server is running."""
-    return "Hello, World!"
 
 
-@app.route("/getLevel/<int:level_num>")
-def get_level_words(level_num):
+
+
+def getWords(level_num: int):
     """
     An endpoint to get a list of words for a specific level.
     """
     try:
         words = getWordsInLevel(level_num)
         return jsonify(words)
-    except IndexError:
-        # This is appropriate if getWordsInLevel raises IndexError for an invalid level
-        return jsonify({"error": "Level number out of range"}), 404
     except Exception as e:
         # General error handler
         return jsonify({"error": f"An unexpected error occurred: {e}"}), 500
 
 
-@app.route("/user_progress/<int:user_id>")
-def get_user_progress(user_id):
+
+def getProgressData(user_id):
     """
     An endpoint to get all completed level information for a specific user.
     """
@@ -92,8 +77,3 @@ def get_user_progress(user_id):
     except Exception as e:
         # Catch any other unexpected errors during execution
         return jsonify({"error": f"An unexpected error occurred: {e}"}), 500
-
-
-if __name__ == '__main__':
-   
-    app.run(host='127.0.0.1', port=5000, debug=True)

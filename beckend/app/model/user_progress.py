@@ -1,4 +1,4 @@
-from storage.DatabaseManager import DatabaseManager
+from beckend.app.storage.DatabaseManager import DatabaseManager
 
 
 def getUserLevelsInformation(user_id: int, databaseManager: DatabaseManager):
@@ -15,22 +15,11 @@ def getUserLevelsInformation(user_id: int, databaseManager: DatabaseManager):
               Returns an empty list if the user has no completed levels, or None if an error occurs.
     """
     # SQL query to select all progress records for a given user, ordered by the level number.
-    sql_query = """
-        SELECT 
-            level_id, 
-            score, 
-            completed_at 
-        FROM 
-            user_progress 
-        WHERE 
-            user_id = %s 
-        ORDER BY 
-            level_id ASC;
-    """
-    
+    sql_query = 'SELECT level_id,score FROM user_progress WHERE user_id = %s ORDER BY level_id ASC;'
+
     # Parameters to be safely injected into the query. It must be a tuple.
     params = (user_id,)
-    
+
     # Execute the query using the database manager's fetch method
     try:
         results = databaseManager.fetch_all_rows(sql_query, params)

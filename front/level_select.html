@@ -16,7 +16,7 @@
         }
 
         .level {
-            
+
             width: calc(20% - 10px);
 
             display: flex;
@@ -27,19 +27,21 @@
             cursor: pointer;
 
         }
-        .level.locked{
+
+        .level.locked {
             background-color: Silver;
         }
-        .level.open{
+
+        .level.open {
             background-color: lightcyan;
         }
 
-        .level.open.clicked{
+        .level.open.clicked {
             background-color: SeaGreen;
         }
-        
+
         .level.open:hover {
-            transform: translateY(-10px); 
+            transform: translateY(-10px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
@@ -89,163 +91,174 @@
         }
     </style>
 </head>
-</body>
-<template>
-    <svg xmlns="http://www.w3.org/2000/svg" class="CheckMarkIcon" viewBox="0 0 10 10"
-fill = "Aquamarine"
->
 
-       
- <polygon points="9.5,0.25 10,0.5 5,10 0,5 0.25,4.5 4.75,9" ></polygon>
+<body>
+    <template>
+        <svg xmlns="http://www.w3.org/2000/svg" class="CheckMarkIcon" viewBox="0 0 10 10" fill="Aquamarine">
 
 
-    </svg>
+            <polygon points="9.5,0.25 10,0.5 5,10 0,5 0.25,4.5 4.75,9"></polygon>
 
 
-    <div class="starsIcon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
-            <polygon points="5,1 6,4 9,4 6.5,6 7.5,9 5,7.5 2.5,9 3.5,6 1,4 4,4" fill="gold" />
         </svg>
-    </div>
+
+
+        <div class="starsIcon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+                <polygon points="5,1 6,4 9,4 6.5,6 7.5,9 5,7.5 2.5,9 3.5,6 1,4 4,4" fill="gold" />
+            </svg>
+        </div>
 
 
 
-    <svg xmlns="http://www.w3.org/2000/svg" class="axeIcon" viewBox="0 0 10 10" fill="OrangeRed">
-        <polygon points=" 0,0.5 0.5,0 10,9.5 9.5,10 " />
-        <polygon points=" 9.5,0 10,0.5 0.5,10 0,9.5 " />
-    </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="axeIcon" viewBox="0 0 10 10" fill="OrangeRed">
+            <polygon points=" 0,0.5 0.5,0 10,9.5 9.5,10 " />
+            <polygon points=" 9.5,0 10,0.5 0.5,10 0,9.5 " />
+        </svg>
 
 
 
-    <div class="level" onclick="handleClick(this)">
+        <div class="level" onclick="handleClick(this)">
 
-        <div class="icon"> </div>
+            <div class="icon"> </div>
 
-        <div class="id">7</div>
-        <div class="score">score 1000</div>
-        <div class="stars"></div>
+            <div class="id">7</div>
+            <div class="score">score 1000</div>
+            <div class="stars"></div>
 
-    </div>
-</template>
-
-
+        </div>
+    </template>
 
 
 
 
-<script>
-    onload = function () {
-        createLevelElement();
-    }
-    let levelsData = [];
-
-    function handleClick(element) {
-    // Toggle the clicked class for visual feedback
-    element.classList.toggle('clicked');
-    
-    // Only proceed with navigation if the level is open (not locked)
-    if (element.classList.contains('open')) {
-        // Get level information to pass to the typing screen
-        const levelId = element.querySelector('.id').textContent;
-        //const levelScore = element.querySelector('.score').textContent;
-        
-        // Store level information in sessionStorage to access it on the typing screen
-        sessionStorage.setItem('level_number', levelId);
-        
-        
-        // Add a small delay so the user can see the clicked state before navigation
-        window.location.href = 'typing_screen2.html';
-       
-    } else {
-        // If level is locked, show a message (optional)
-        alert('This level is locked. Complete previous levels to unlock.');
-    }
-}
-    function setEqualHeightWidth(element) {
-        const width = element.offsetWidth;
-        element.style.height = width + 'px';
-    }
-
-    function getRandomInteger(min = 0, max = 1000) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function createLevelElement() {
-        let scoreRand;
-        for (let i = 0; i < 23; i++) {
-            scoreRand = getRandomInteger(600, 1000);
-
-            let newData = { score: scoreRand, locked: !(scoreRand >= 600) };
-            levelsData.push(newData);
-        }
-        scoreRand = 0;
-        for (let i = 0; i < 20; i++) {
-            let newData = { score: scoreRand, locked: !(scoreRand >= 600) };
-            levelsData.push(newData);
-        }
-
-        let template = document.getElementsByTagName('template')[0];
-        let levelDiv = template.content.querySelector(".level").cloneNode(true);
-        setEqualHeightWidth(levelDiv);
-        console.log(template.content.querySelector(".level"));
-        // levelDiv.style.height = levelDiv.style.width ;
-        console.log(levelDiv);
-
-        let CheckMarkIcon = template.content.querySelector(".CheckMarkIcon");
-        let starsIcon = template.content.querySelector(".starsIcon");
-        let axeIcon = template.content.querySelector(".axeIcon");
 
 
-        let starsNumer;
+    <script>{
+            const numOfLevels = 20;
+            const template = document.getElementsByTagName('template')[0];
+            const levelDiv = template.content.querySelector(".level").cloneNode(true);
+            const CheckMarkIcon = template.content.querySelector(".CheckMarkIcon");
+            const starsIcon = template.content.querySelector(".starsIcon");
+            const axeIcon = template.content.querySelector(".axeIcon");
 
-        for (const item of levelsData) {
-            let newlevel = levelDiv.cloneNode(true);
-            newlevel.getElementsByClassName('score')[0].textContent = "score: " + item.score;
-            newlevel.getElementsByClassName('id')[0].textContent = "" + levelsData.indexOf(item);
-            document.body.appendChild(newlevel);
-            if (!item.locked) {
-                newlevel.getElementsByClassName('icon')[0].appendChild(CheckMarkIcon.cloneNode(true));
-                newlevel.classList.add('open');
+
+
+
+            window.onload = async function () {
+                loadAndDisplayUserProgress();
+
+
+            }
+
+
+            async function loadAndDisplayUserProgress() {
+                try {
+                    const response = await fetch(`http://127.0.0.1:5000/user_progress/1`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const userProgressData = await response.json();
+                    console.log("User Progress Data:", userProgressData);
+                    createAllLevels(userProgressData);
+                } catch (error) {
+                    console.error("Failed to load user progress:", error.message);
+
+                }
+            }
+
+
+
+
+
+           
+
+            function createAllLevels(userProgressData) {
+                
+                if (userProgressData[userProgressData.length - 1][1] > 600)
+                    userProgressData.push([userProgressData.length, 0]);
+
+               for(item of userProgressData){
+             createLevel(item[0], item[1], true) 
+
+               }
 
                 
-            }
-            else {
-                newlevel.getElementsByClassName('icon')[0].appendChild(axeIcon.cloneNode(true));
-                newlevel.classList.add('locked');
+                for(i = userProgressData.length; i < numOfLevels; i++) {
+                    
+                    createLevel(i, 0, false) 
+                    
+                }
 
             }
-            if (item.score > 900) { starsNumer = 5; }
-            else if (item.score > 750) { starsNumer = 4; }
-            else if (item.score > 600) { starsNumer = 3; }
-            else {
-                starsNumer = 0;
+
+
+
+            function createLevel(levelId, levelScore, isOpen) {
+                let newlevel = levelDiv.cloneNode(true);
+
+                newlevel.getElementsByClassName('id')[0].textContent = "" + (levelId);
+                if(isOpen){
+                    
+                    newlevel.getElementsByClassName('score')[0].textContent = "score: " + levelScore;
+                    newlevel.getElementsByClassName('icon')[0].appendChild(CheckMarkIcon.cloneNode(true));
+                    newlevel.classList.add('open');
+
+
+
+                    if (levelScore > 900) { starsNumer = 5; }
+                    else if (levelScore > 750) { starsNumer = 4; }
+                    else if (levelScore > 600) { starsNumer = 3; }
+                    else {
+                        starsNumer = 0;
+                    }
+
+                    for (let i = 0; i < starsNumer; i++) {
+                        let newStar = starsIcon.cloneNode(true);
+                        newlevel.getElementsByClassName('stars')[0].appendChild(newStar);
+
+                    }
+                    
+
+                }
+                else
+                {
+                    newlevel.getElementsByClassName('icon')[0].appendChild(axeIcon.cloneNode(true));
+                    newlevel.classList.add('locked');
+                   
+                }
+                document.body.appendChild(newlevel);
             }
+                
+            
 
-            for (let i = 0; i < starsNumer; i++) {
-                let newStar = starsIcon.cloneNode(true);
-                newlevel.getElementsByClassName('stars')[0].appendChild(newStar);
+            
 
+        function handleClick(element) {
+            // Toggle the clicked class for visual feedback
+            element.classList.toggle('clicked');
+
+            // Only proceed with navigation if the level is open (not locked)
+            if (element.classList.contains('open')) {
+                // Get level information to pass to the typing screen
+                const levelId = element.querySelector('.id').textContent;
+                //const levelScore = element.querySelector('.score').textContent;
+
+                // Store level information in sessionStorage to access it on the typing screen
+                sessionStorage.setItem('level_number', levelId);
+
+
+                // Add a small delay so the user can see the clicked state before navigation
+                window.location.href = 'gameplay.html';
+
+            } else {
+                // If level is locked, show a message (optional)
+                alert('This level is locked. Complete previous levels to unlock.');
             }
-            setEqualHeightWidth(newlevel);
-
-            console.log(newlevel);
-
         }
 
-
-
-
-
-
     }
-
-
-
-
-
-
-
-</script>
+    </script>
 
 </body>
 

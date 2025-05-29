@@ -4,8 +4,6 @@
 <head>
     <title>Typing App</title>
     <style>
-       
-
         .body {
 
 
@@ -49,8 +47,8 @@
             font-weight: bold;
             background-color: aliceblue;
             color: #200441;
-            margin: 10% 15% ;
-            
+            margin: 10% 15%;
+
         }
 
 
@@ -133,7 +131,7 @@
 
 
 
-        <div class="user_typing" id="id_user_typing">ewyery</div>
+        <div class="user_typing" id="id_user_typing"></div>
 
 
 
@@ -166,64 +164,77 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
-        { 
-        
-        const play = document.getElementById("id_play");
-        const stop = document.getElementById("id_stop");
-        const pause = document.getElementById("id_pause");
-        const user_typing = document.getElementById("id_user_typing");
-        const time = document.getElementById("id_time");
-        const accuracy = document.getElementById("id_accuracy");
-        const speed = document.getElementById("id_speed");
-           let level_data = [];
+        {
 
-            
-     
-        async function loadLevelData(level_number) {
-           
-            if (!level_number) {
-                user_typing.innerText = "Error: level number not found.";
-                return;
+            const play = document.getElementById("id_play");
+            const stop = document.getElementById("id_stop");
+            const pause = document.getElementById("id_pause");
+            const user_typing = document.getElementById("id_user_typing");
+            const time = document.getElementById("id_time");
+            const accuracy = document.getElementById("id_accuracy");
+            const speed = document.getElementById("id_speed");
+            const level_number = getlevel_number();
+
+
+            window.onload = function () {
+
+
+
+                loadLevelData(level_number).
+                    then((levelWords) => {
+                        handleWords(levelWords);
+                    });
+
             }
 
-            try {
+            function handleWords(levelWords) {
+                
                
-                const response = await fetch('http://localhost:5000/getLevel/' + level_number);
+                let d2_words = [[]];
+                for (let word in levelWords)
+                {
+                    if (word %5 == 0)
+                        d2_words.push([]);
+                    d2_words[Math.floor(Number(word)/5)].push(levelWords[word]);
+                }
+                for (let word of d2_words[1])
+                {
+                    user_typing.textContent += " " + word
+                }
+                
+                
+            }
 
-               
-                if (!response.ok) {
-                    throw new Error(`error ${response.statusText}`);
+            
+
+            function getlevel_number() {
+                return sessionStorage.getItem('level_number');
+            }
+
+
+
+
+            async function loadLevelData() {
+                try {
+                    const response = await fetch('http://localhost:5000/getLevel/' + level_number);
+                    let levelWords = await response.json();
+                    console.log(levelWords);
+                    return levelWords;
+
+                }
+                catch (error) {
+                    console.log('load level data failed' + error.message);
+                    return null;
                 }
 
-               
-                const data = await response.json();
-                
-          
-                level_data = data;
-                console.log("Level data loaded successfully:", level_data);
-
-
-            } catch (error) {
-               
-                console.error("An error occurred while loading the information: ", error.message);
-                print("An error occurred while loading the information: ", error.message)
-                user_typing.innerText = "An error occurred while loading the information.";
             }
+
+
+
+
+
+
         }
-
-
-
-
-
-window.onload = function () {
-              const level_number = sessionStorage.getItem('level_number');
-            
-           
-            loadLevelData(level_number);
-            }
-
-
-    }
     </script>
 </body>
 
